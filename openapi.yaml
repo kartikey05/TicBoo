@@ -1,0 +1,236 @@
+openapi: 3.0.3
+info:
+  title: TicketBooking - OpenAPI 3.0
+  description: This is a Movie Ticket booking site.
+  contact:
+    email: support@TicketBooking.com
+  version: 1.0.11
+servers:
+  - url: 127.0.0.1:5000
+LoginAPI:
+  get:
+    path: "/login/<string:username>/<string:password>"
+    responses:
+      200:
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                role_id:
+                  type: integer
+                User_id:
+                  type: integer
+
+UserAPI:
+  post:
+    path: "/user"
+    request_body:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              username:
+                type: string
+              email:
+                type: string
+              password:
+                type: string
+    responses:
+      201:
+        description: Created
+
+# Define Venue API endpoints
+VenueAPI:
+  get:
+    path: "/venue/<int:venue_id>"
+    responses:
+      200:
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                venue_id:
+                  type: integer
+                venue_name:
+                  type: string
+                place:
+                  type: string
+                capacity:
+                  type: integer
+      404:
+        description: Not Found
+  post:
+    path: "/venue"
+    security:
+      - token_required: []
+    request_body:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              venue_name:
+                type: string
+              place:
+                type: string
+              capacity:
+                type: integer
+    responses:
+      200:
+        description: OK
+  put:
+    path: "/venue/<int:venue_id>"
+    security:
+      - admin_token_required: []
+    request_body:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              venue_name:
+                type: string
+              place:
+                type: string
+              capacity:
+                type: integer
+    responses:
+      200:
+        description: OK
+      404:
+        description: Not Found
+  delete:
+    path: "/venue/<int:venue_id>"
+    security:
+      - admin_token_required: []
+    responses:
+      200:
+        description: OK
+      404:
+        description: Not Found
+
+# Define Show API endpoints
+ShowAPI:
+  get:
+    path: "/show/<int:show_id>"
+    responses:
+      200:
+        description: OK
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                id:
+                  type: integer
+                show_name:
+                  type: string
+                rating:
+                  type: integer
+                ticket_price:
+                  type: number
+                language:
+                  type: string
+                tags:
+                  type: string
+                date:
+                  type: string
+                venue:
+                  type: object
+                  properties:
+                    venue_id:
+                      type: integer
+                    venue_name:
+                      type: string
+                    place:
+                      type: string
+                    capacity:
+                      type: integer
+      404:
+        description: Not Found
+  post:
+    path: "/show"
+    security:
+      - admin_token_required: []
+    request_body:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              show_name:
+                type: string
+              vid:
+                type: integer
+              rating:
+                type: integer
+              tags:
+                type: string
+              ticket_price:
+                type: number
+              language:
+                type: string
+              date:
+                type: string
+    responses:
+      200:
+        description: OK
+  put:
+    path: "/show/<int:show_id>"
+    security:
+      - admin_token_required: []
+    request_body:
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              show_name:
+                type: string
+              vid:
+                type: integer
+              ticket_price:
+                type: number
+              date:
+                type: string
+    responses:
+      200:
+        description: OK
+      404:
+        description: Not Found
+  delete:
+    path: "/show/<int:show_id>"
+    security:
+      - admin_token_required: []
+    responses:
+      200:
+        description: OK
+      404:
+        description: Not Found
+
+# Define booking API endpoint
+BookShowAPI:
+  post:
+    path: "/bookshow/<int:show_id>/<int:user_id>/<int:tickets>"
+    security:
+      - token_required: []
+    responses:
+      200:
+        description: OK
+
+# Define endpoint to get user bookings
+getuserbookings:
+  get:
+    path: "/userbookings/<int:user_id>"
+    security:
+      - token_required: []
+    responses:
+      200:
+        description: OK
